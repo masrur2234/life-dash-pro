@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
 
     if (message.includes('relation') || message.includes('table') || message.includes('does not exist')) {
       return NextResponse.json(
-        { error: 'Database tables not created yet. Please visit /api/setup first, or set DATABASE_URL in Vercel.' },
+        { error: 'Database tables not created yet. Please visit /api/setup first.' },
         { status: 500 }
       );
     }
