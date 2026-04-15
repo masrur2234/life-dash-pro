@@ -152,4 +152,44 @@ function generateLocalResponse(message: string, spendingContext: string): string
   // Task/productivity-related responses
   if (lower.includes('task') || lower.includes('todo') || lower.includes('productiv') || lower.includes('fokus') || lower.includes('kerja') || lower.includes('deadline') || lower.includes('stress') || lower.includes('tired') || lower.includes('lelah') || lower.includes('malas') || lower.includes('lazy')) {
     const tips = [
-      "Break big tasks
+      "Break big tasks into smaller ones! 🧩 A 10-min task feels way easier than a 2-hour project.",
+      "Try the Pomodoro technique: 25 min focus, 5 min break. It's simple but powerful! 🍅",
+      "Prioritize your top 3 tasks each morning. Focus on those first! 🎯",
+      "Take breaks! Your brain needs rest to stay productive. A 10-min walk can boost focus by 50%. 🚶",
+      "Done is better than perfect! ✅ Ship it, then improve. Perfectionism kills productivity.",
+      "You got this! 💪 Remember why you started. Small progress is still progress!",
+    ];
+    return tips[Math.floor(Math.random() * tips.length)];
+  }
+
+  // Greeting responses
+  if (lower.includes('hello') || lower.includes('hi') || lower.includes('halo') || lower.includes('hai') || lower.includes('hey') || lower.includes('pagi') || lower.includes('siang') || lower.includes('malam') || lower.includes('morning') || lower.includes('evening')) {
+    const greetings = [
+      "Hey there! 👋 I'm Dash, your AI life coach. How can I help you today?",
+      "Hello! 😊 Ready to make today count? Tell me what's on your mind!",
+      "Hi! 🌟 Great to see you. Track a habit, log spending, or just chat — I'm here!",
+    ];
+    return greetings[Math.floor(Math.random() * greetings.length)];
+  }
+
+  // Motivational responses
+  if (lower.includes('motivat') || lower.includes('semangat') || lower.includes('can i') || lower.includes('bisa') || lower.includes('galau') || lower.includes('sedih') || lower.includes('sad') || lower.includes('down')) {
+    const motivations = [
+      "You're doing amazing just by being here! 🌟 Progress, not perfection, remember?",
+      "Every expert was once a beginner. Keep going! 🔥 Your future self will thank you.",
+      "Tough times don't last, but tough people do! 💪 You've got what it takes.",
+      "Small steps every day lead to big changes. Trust the process! 🚀",
+    ];
+    return motivations[Math.floor(Math.random() * motivations.length)];
+  }
+
+  // Default responses
+  const defaults = [
+    "I hear you! 💬 Try logging your spending or checking off a habit — small actions build big results!",
+    "Interesting! 🤔 Tell me more about that. Meanwhile, don't forget to track your habits today!",
+    "Thanks for sharing! 🌟 I'm here to help with finances, habits, and productivity. What would you like to work on?",
+    "Noted! ✨ Pro tip: Check your spending insights for the week — it might surprise you!",
+    "Got it! 🎯 Remember, consistency beats intensity. Keep showing up every day!",
+  ];
+  return defaults[Math.floor(Math.random() * defaults.length)];
+}
