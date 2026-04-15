@@ -2,7 +2,6 @@ import { db } from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
 import { randomUUID, createHash } from 'crypto';
 
-// Simple hash function using Node.js crypto
 function hashPassword(password: string): string {
   return createHash('sha256').update(password + 'lifedash-salt-2024').digest('hex');
 }
@@ -11,9 +10,15 @@ function verifyPassword(password: string, hash: string): boolean {
   return hashPassword(password) === hash;
 }
 
-// POST /api/auth — login or register
 export async function POST(request: NextRequest) {
   try {
+    if (!process.env.DATABASE_URL) {
+      return NextResponse.json(
+        { error: 'Database not configured. Set DATABASE_URL in Vercel Environment Variables.' },
+        { status: 500 }
+      );
+    }
+
     const body = await request.json();
     const { action, email, password, name } = body;
 
@@ -64,7 +69,6 @@ export async function POST(request: NextRequest) {
       }
 
       if (!user.passwordHash) {
-        // Legacy user without password (seeded user) — allow any password
         return NextResponse.json({
           success: true,
           user: {
@@ -93,13 +97,21 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ error: 'Invalid action. Use "login" or "register".' }, { status: 400 });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Auth error:', error);
-    return NextResponse.json({ error: 'Authentication failed' }, { status: 500 });
+    const message = error instanceof Error ? error.message : 'Unknown error';
+
+    if (message.includes('relation') || message.includes('table') || message.includes('does not exist')) {
+      return NextResponse.json(
+        { error: 'Database tables not created yet. Please visit /api/setup first, or set DATABASE_URL in Vercel.' },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({ error: 'Server error: ' + message }, { status: 500 });
   }
 }
 
-// GET /api/auth — health check
 export async function GET() {
   try {
     return NextResponse.json({ status: 'ok' });
