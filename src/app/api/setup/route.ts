@@ -1,4 +1,3 @@
-import { db, ensureSchema } from '@/lib/db';
 import { NextResponse } from 'next/server';
 
 // POST /api/setup — auto-create database tables
@@ -11,22 +10,28 @@ export async function POST() {
       }, { status: 500 });
     }
 
-    await ensureSchema();
+    const { execSync } = await import('child_process');
 
-    // Verify by counting users
+    execSync('npx prisma db push --accept-data-loss 2>&1', {
+      stdio: 'pipe',
+      timeout: 60000,
+    });
+
+    // Import db after schema push
+    const { db } = await import('@/lib/db');
     const userCount = await db.user.count();
 
     return NextResponse.json({
       success: true,
       message: 'Database is ready!',
+      tablesCreated: true,
       userCount,
     });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Setup error:', error);
     return NextResponse.json({
       success: false,
-      error: message,
+      error: 'Failed to setup database: ' + message,
     }, { status: 500 });
   }
 }
