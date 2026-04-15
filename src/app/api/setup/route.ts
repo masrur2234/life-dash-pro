@@ -1,12 +1,11 @@
 import { NextResponse } from 'next/server';
 
-// POST /api/setup — auto-create database tables
 export async function POST() {
   try {
     if (!process.env.DATABASE_URL) {
       return NextResponse.json({
         success: false,
-        error: 'DATABASE_URL is not configured. Go to Vercel > Settings > Environment Variables and add DATABASE_URL with your PostgreSQL connection string.',
+        error: 'DATABASE_URL is not configured. Go to Vercel > Settings > Environment Variables and add DATABASE_URL.',
       }, { status: 500 });
     }
 
@@ -17,7 +16,6 @@ export async function POST() {
       timeout: 60000,
     });
 
-    // Import db after schema push
     const { db } = await import('@/lib/db');
     const userCount = await db.user.count();
 
