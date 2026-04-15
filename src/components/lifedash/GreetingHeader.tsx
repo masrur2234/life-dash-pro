@@ -1,6 +1,7 @@
 'use client';
 
 import { useIsMounted } from '@/hooks/use-is-mounted';
+import { useAppStore } from '@/stores/app-store';
 
 interface GreetingHeaderProps {
   isDesktop?: boolean;
@@ -8,6 +9,7 @@ interface GreetingHeaderProps {
 
 export function GreetingHeader({ isDesktop }: GreetingHeaderProps) {
   const mounted = useIsMounted();
+  const { user } = useAppStore();
 
   const now = mounted ? new Date() : null;
   const hour = now ? now.getHours() : 12;
@@ -20,6 +22,9 @@ export function GreetingHeader({ isDesktop }: GreetingHeaderProps) {
         day: 'numeric',
       })
     : '';
+
+  const userName = user?.name || 'User';
+  const firstName = userName.split(' ')[0];
 
   if (!mounted) {
     return (
@@ -35,7 +40,7 @@ export function GreetingHeader({ isDesktop }: GreetingHeaderProps) {
       <p className="text-sm text-muted-foreground mb-1">{dateStr}</p>
       <h1 className={isDesktop ? 'text-4xl font-bold tracking-tight' : 'text-2xl font-bold tracking-tight'}>
         {greeting},{' '}
-        <span className="gradient-text">Alex</span>{' '}
+        <span className="gradient-text">{firstName}</span>{' '}
         <span className="inline-block animate-float">👋</span>
       </h1>
       {isDesktop && (
