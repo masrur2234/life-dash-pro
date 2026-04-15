@@ -5,12 +5,14 @@ const globalForPrisma = globalThis as unknown as {
 }
 
 function createPrismaClient() {
-  // In production (Vercel), use connection pooling via DATABASE_URL_UNPOOLED for migrations
-  // and regular DATABASE_URL (with pooler) for queries
   const connectionString = process.env.DATABASE_URL || ''
 
+  if (!connectionString) {
+    console.error('DATABASE_URL is not set. Please configure it in Vercel Environment Variables.')
+  }
+
   return new PrismaClient({
-    log: process.env.NODE_ENV === 'development' ? ['error'] : ['error'],
+    log: ['error'],
     datasources: {
       db: {
         url: connectionString,
